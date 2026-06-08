@@ -4,7 +4,6 @@
 
 class check {
 public:
-    //функция для проверки ввода в меню
     static int valid_action() {
         int value;
         while(!(std::cin >> value)) {
@@ -16,20 +15,16 @@ public:
         return value;
     }
 
-    //проверка корректности строки (пробелы и допустимые операции)
     static bool is_valid_str(std::string line) {
         if (line.empty()) {
             std::cout << "!Ошибка. Выражение пустое." << std::endl;
             return false;
         }
-        //проверка на лишние пробелы (в начале и в конце выражения)
         if (line[0] == ' ' || line[line.size() - 1] == ' ') { return false; }
 
         for (int i = 0; i < line.size(); i++) {
-            //проверка на лишние пробелы внутри выражения
             if (i < line.size() - 1 && line[i] == ' ' 
                                     && line[i + 1] == ' ') { return false; }
-            //проверка на операции
             if (!(std::isdigit(line[i])) && (line[i] != '*')
                                          && (line[i] != '/') 
                                          && (line[i] != '-') 
@@ -58,9 +53,8 @@ private:
     Node* top;
 
 public:
-    //запрет на конструктор копирования
     stack(const stack&) = delete;
-    //запрет копирования на оператор присваивания
+
     stack& operator=(const stack&) = delete;
 
     stack() { top = nullptr; }
@@ -111,9 +105,8 @@ public:
 
 class postfix_exp {
 private:
-    std::string text; //исходная строка с выражением
+    std::string text;
 
-    //функция определения операций
     double is_operation(double a, double b, std::string op) {
         if (op == "+") { return a + b; }
         else if (op == "-") { return a - b; }
@@ -128,10 +121,8 @@ private:
         else { return 0.0; }
     }
 public:
-    //конструктор
     postfix_exp(std::string line) { text = line; }
 
-    //метод вычисления постф. выражения
     void method_postfix() {
         stack expression;
         std::string token;
