@@ -2,7 +2,7 @@
 #include "pr.h"
 #include <string>
 
-void promt() {
+void Promt() {
     std::cout << std::endl << "Подсказка: " << std::endl
               << "~ Вид постфиксной записи: a b операция" << std::endl
               << "~ Операнды: положительные вещественные числа" << std::endl
@@ -10,19 +10,19 @@ void promt() {
               << "~ Между числами и знаками строго 1 пробел" << std::endl << std::endl; 
 }
 
-void one() {
-    promt();
+void One() {
+    Promt();
 
     std::string str;
     std::cout << "Введите ваше выражение: ";
     std::getline(std::cin, str);
 
-    if (!check::is_valid_str(str)) {
+    if (!Check::IsValidStr(str)) {
         std::cout << "!Ошибка. Некорректная строка на входе." << std::endl;
         return;
     }
 
-    postfix_exp pexp(str);
+    PostfixExp pexp(str);
 
-    pexp.method_postfix();
+    pexp.MethodPostfix();
 }

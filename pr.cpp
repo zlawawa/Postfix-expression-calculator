@@ -2,12 +2,12 @@
 #include "pr.h"
 #include <windows.h>
 
-int menu() {
+int Menu() {
     std::cout << std::endl << "!! Меню:" << std::endl
               << "1. Вычислить заданное выражение;" << std::endl
               << "0. Выход." << std::endl
               << "Ваш выбор? ";
-    return check::valid_action();
+    return Check::ValidAction();
 }
 
 int main() {
@@ -17,10 +17,10 @@ int main() {
     std::cout << std::endl << "----Калькулятор постфиксных выражений----";
     int choice;
     do {
-        choice = menu();
+        choice = Menu();
         switch (choice) {
             case 1: {
-                one();
+                One();
                 std::cout << "Возврат в меню..." << std::endl << std::endl;
                 break;
             } case 0: {

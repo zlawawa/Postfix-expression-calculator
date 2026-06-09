@@ -2,9 +2,9 @@
 #include <limits>
 #include <string>
 
-class check {
+class Check {
 public:
-    static int valid_action() {
+    static int ValidAction() {
         int value;
         while(!(std::cin >> value)) {
             std::cin.clear();
@@ -15,7 +15,7 @@ public:
         return value;
     }
 
-    static bool is_valid_str(std::string line) {
+    static bool IsValidStr(std::string line) {
         if (line.empty()) {
             std::cout << "!Ошибка. Выражение пустое." << std::endl;
             return false;
@@ -36,15 +36,16 @@ public:
     }
 };
 
-class calc_exception : public std::exception {
+class CalcException : public std::exception {
 private:
     std::string m_error;
+
 public:
-    calc_exception(std::string error) : m_error{ error } {}
+    CalcException(std::string error) : m_error{ error } {}
     const char* what() const noexcept override { return m_error.c_str(); }
 };
 
-class stack {
+class Stack {
 private:
     struct Node {
         double value;
@@ -53,61 +54,61 @@ private:
     Node* top;
 
 public:
-    stack(const stack&) = delete;
+    Stack(const Stack&) = delete;
 
-    stack& operator=(const stack&) = delete;
+    Stack& operator=(const Stack&) = delete;
 
-    stack() { top = nullptr; }
+    Stack() { top = nullptr; }
 
-    ~stack() { 
+    ~Stack() { 
         while (top != nullptr) {
-            Node* temp = top;
+            Node* temp_node = top;
             top = top->next;
-            delete temp;
+            delete temp_node;
         }
     }
 
-    void push(double v) {
-        Node* newNode = new Node;
-        newNode->value = v;
-        newNode->next = top;
-        top = newNode;
+    void Push(double v) {
+        Node* new_node = new Node;
+        new_node->value = v;
+        new_node->next = top;
+        top = new_node;
     } 
 
-    void pop() {
+    void Pop() {
         if (is_empty()) { return; }
-        Node* tempNode = top;
-        top = tempNode->next;
-        delete tempNode;
+        Node* temp_node = top;
+        top = temp_node->next;
+        delete temp_node;
     }
 
-    double get_top() { 
-        if (is_empty()) { throw calc_exception("!Ошибка. Стек пуст."); }
+    double get_top() const { 
+        if (is_empty()) { throw CalcException("!Ошибка. Стек пуст."); }
         return top->value; 
     }
 
-    bool is_empty() {
+    bool is_empty() const {
         if (top == nullptr) { return true; }
         return false;
     }
 
-    int get_quantity() {
-        Node* temp = top;
+    int GetQuantity() const {
+        Node* temp_node = top;
         int cnt = 0;
-        while (temp != nullptr) {
+        while (temp_node != nullptr) {
             cnt++;
-            temp = temp->next;
+            temp_node = temp_node->next;
         }
         return cnt;
     }
 
 };
 
-class postfix_exp {
+class PostfixExp {
 private:
     std::string text;
 
-    double is_operation(double a, double b, std::string op) {
+    double IsOperation(double a, double b, std::string op) {
         if (op == "+") { return a + b; }
         else if (op == "-") { return a - b; }
         else if (op == "*") { return a * b; }
@@ -115,16 +116,17 @@ private:
             if (b != 0) {
                 return a / b; 
             } else {
-                throw calc_exception("!Ошибка. Деление на 0 невозможно...");
+                throw CalcException("!Ошибка. Деление на 0 невозможно...");
             }
         }
         else { return 0.0; }
     }
-public:
-    postfix_exp(std::string line) { text = line; }
 
-    void method_postfix() {
-        stack expression;
+public:
+    PostfixExp(std::string line) { text = line; }
+
+    void MethodPostfix() {
+        Stack expression;
         std::string token;
         
         for (int i = 0; i <= text.size(); i++) {
@@ -132,26 +134,26 @@ public:
                 token += text[i];
             } else {
                 if (token.empty()) { continue; }
-
+                
                 try {
                     double value = std::stod(token);
                     if (value < 0) { std::cout << "!Ошибка. Ожидались положительные числа..." << std::endl; return; }
-                    expression.push(value);
+                    expression.Push(value);
                 } catch (...) {
                     /* так как std::stod не смог преобразовать токен в вещ. число, значит это знак операции,
                        достаём правый и левый операнд из стека для выполнения операции */
                     if (expression.is_empty()) { std::cout << "!Ошибка. Некорректное выражение." << std::endl; return; }
                     double b = expression.get_top();
-                    expression.pop();
+                    expression.Pop();
 
                     if (expression.is_empty()) { std::cout << "!Ошибка. Некорректное выражение." << std::endl; return; }
                     double a = expression.get_top();
-                    expression.pop();
+                    expression.Pop();
 
                     try {
-                        double temp = is_operation(a, b, token);
-                        expression.push(temp);
-                    } catch (const calc_exception& c) {
+                        double temp = IsOperation(a, b, token);
+                        expression.Push(temp);
+                    } catch (const CalcException& c) {
                         std::cout << c.what() << std::endl;
                         return;
                     }
@@ -159,9 +161,9 @@ public:
                 token = "";
             }
         }
-        if (expression.get_quantity() != 1) { std::cout << "!Ошибка. Некорректное выражение." << std::endl; return; }
+        if (expression.GetQuantity() != 1) { std::cout << "!Ошибка. Некорректное выражение." << std::endl; return; }
         std::cout << "Результат: " << expression.get_top() << std::endl;
     }
 };
 
-void one();
+void One();
